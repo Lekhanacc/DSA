@@ -1,22 +1,15 @@
 class Solution {
     public int maxProfit(int[] prices) {
-        return stockBuySell(prices, prices.length);
-    }
-
-    private int stockBuySell(int[] arr, int n) {
-
-        int minPrice = arr[0];
+        int minPrice = Integer.MAX_VALUE;
         int maxProfit = 0;
 
-        for (int i = 1; i < n; i++) {
-            if (arr[i] < minPrice) {
-                minPrice = arr[i];
+        for (int price : prices) {
+            if (price < minPrice) {
+                minPrice = price;          // best day to buy so far
             } else {
-                int profit = arr[i] - minPrice;
-                maxProfit = Math.max(maxProfit, profit);
+                maxProfit = Math.max(maxProfit, price - minPrice);
             }
         }
-
         return maxProfit;
     }
 }

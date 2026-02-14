@@ -1,43 +1,42 @@
 class Solution {
-    public static void main(String[] args) {
-        Solution sol = new Solution();
-        int[] nums = {2, 5, 6, 0, 0, 1, 2}; // Rotated array with duplicates
-        int target = 0;
-        System.out.println(sol.search(nums, target)); // Expected output: true
-    }
     public boolean search(int[] nums, int target) {
-        int start = 0;
-        int end = nums.length - 1;
 
-        while (start <= end) {
-            int mid = start + (end - start) / 2;
+        int low = 0;
+        int high = nums.length - 1;
 
-            if (nums[mid] == target) {
+        while (low <= high) {
+
+            int mid = low + (high - low) / 2;
+
+            if (nums[mid] == target)
                 return true;
+
+            // duplicates case
+            if (nums[low] == nums[mid] && nums[mid] == nums[high]) {
+                low++;
+                high--;
+                continue;
             }
 
-            // Handle duplicates by incrementing start
-            while (start < mid && nums[start] == nums[mid]) {
-                start++;
+            // Left half sorted
+            if (nums[low] <= nums[mid]) {
+
+                if (target >= nums[low] && target < nums[mid])
+                    high = mid - 1;
+                else
+                    low = mid + 1;
             }
 
-            // Check if the left half is sorted
-            if (nums[start] <= nums[mid]) {
-                if (nums[start] <= target && target < nums[mid]) {
-                    end = mid - 1; // Search left half
-                } else {
-                    start = mid + 1; // Search right half
-                }
-            } 
-            // Otherwise, the right half must be sorted
+            // Right half sorted
             else {
-                if (nums[mid] < target && target <= nums[end]) {
-                    start = mid + 1; // Search right half
-                } else {
-                    end = mid - 1; // Search left half
-                }
+
+                if (target > nums[mid] && target <= nums[high])
+                    low = mid + 1;
+                else
+                    high = mid - 1;
             }
         }
-        return false; // Target not found
+
+        return false;
     }
-}  
+}

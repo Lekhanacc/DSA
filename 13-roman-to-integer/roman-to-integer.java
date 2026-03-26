@@ -1,30 +1,30 @@
 class Solution {
     public int romanToInt(String s) {
-
-        int[] values = new int[128];
-
-        values['I'] = 1;
-        values['V'] = 5;
-        values['X'] = 10;
-        values['L'] = 50;
-        values['C'] = 100;
-        values['D'] = 500;
-        values['M'] = 1000;
-
         int total = 0;
 
         for (int i = 0; i < s.length(); i++) {
+            int curr = value(s.charAt(i));
 
-            int current = values[s.charAt(i)];
-
-            // If next symbol exists and is bigger → subtract
-            if (i + 1 < s.length() && current < values[s.charAt(i + 1)]) {
-                total -= current;
+            if (i < s.length() - 1 && curr < value(s.charAt(i + 1))) {
+                total -= curr;
             } else {
-                total += current;
+                total += curr;
             }
         }
 
         return total;
+    }
+
+    private int value(char ch) {
+        switch (ch) {
+            case 'I': return 1;
+            case 'V': return 5;
+            case 'X': return 10;
+            case 'L': return 50;
+            case 'C': return 100;
+            case 'D': return 500;
+            case 'M': return 1000;
+        }
+        return 0;
     }
 }

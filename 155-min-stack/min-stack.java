@@ -2,14 +2,8 @@ import java.util.*;
 
 class MinStack {
 
-    Stack<Integer> st;
-    Stack<Integer> minSt;
-
-    public MinStack() {
-
-        st = new Stack<>();
-        minSt = new Stack<>();
-    }
+    Stack<Integer> st = new Stack<>();
+    Stack<Integer> minSt = new Stack<>();
 
     public void push(int val) {
 

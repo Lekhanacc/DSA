@@ -13,26 +13,54 @@
  *     }
  * }
  */
+
+ // *******    RECURSION    *************
+
+// class Solution {
+
+//     List<Integer> ans = new ArrayList<>();
+
+//     public List<Integer> inorderTraversal(TreeNode root) {
+
+//         inorder(root);
+
+//         return ans;
+//     }
+
+//     private void inorder(TreeNode root) {
+
+//         if (root == null)
+//             return;
+
+//         inorder(root.left);
+
+//         ans.add(root.val);
+
+//         inorder(root.right);
+//     }
+// } 
+
+// *********** STACK **************   
+
 class Solution {
-
-    List<Integer> ans = new ArrayList<>();
-
     public List<Integer> inorderTraversal(TreeNode root) {
 
-        inorder(root);
+        List<Integer> inorder = new ArrayList<>();
+        Stack<TreeNode> st = new Stack<>();
 
-        return ans;
-    }
+        while (root != null || !st.isEmpty()) {
 
-    private void inorder(TreeNode root) {
+            while (root != null) {
+                st.push(root);
+                root = root.left;
+            }
 
-        if (root == null)
-            return;
+            root = st.pop();
+            inorder.add(root.val);
 
-        inorder(root.left);
+            root = root.right;
+        }
 
-        ans.add(root.val);
-
-        inorder(root.right);
+        return inorder;
     }
 }

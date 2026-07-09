@@ -15,23 +15,45 @@
  */
 
  // ************** O(N**2) *********
+// class Solution {
+
+//     public int diameterOfBinaryTree(TreeNode root) {
+
+//         if (root == null)
+//             return 0;
+
+//         int leftHeight = height(root.left);
+//         int rightHeight = height(root.right);
+
+//         int currentDiameter = leftHeight + rightHeight;
+
+//         int leftDiameter = diameterOfBinaryTree(root.left);
+//         int rightDiameter = diameterOfBinaryTree(root.right);
+
+//         return Math.max(currentDiameter,
+//                 Math.max(leftDiameter, rightDiameter));
+//     }
+
+//     private int height(TreeNode root) {
+
+//         if (root == null)
+//             return 0;
+
+//         return 1 + Math.max(height(root.left), height(root.right));
+//     }
+// }
+
+// ***************** OPTIMIZED *********************
+
 class Solution {
+
+    int diameter = 0;
 
     public int diameterOfBinaryTree(TreeNode root) {
 
-        if (root == null)
-            return 0;
+        height(root);
 
-        int leftHeight = height(root.left);
-        int rightHeight = height(root.right);
-
-        int currentDiameter = leftHeight + rightHeight;
-
-        int leftDiameter = diameterOfBinaryTree(root.left);
-        int rightDiameter = diameterOfBinaryTree(root.right);
-
-        return Math.max(currentDiameter,
-                Math.max(leftDiameter, rightDiameter));
+        return diameter;
     }
 
     private int height(TreeNode root) {
@@ -39,6 +61,11 @@ class Solution {
         if (root == null)
             return 0;
 
-        return 1 + Math.max(height(root.left), height(root.right));
+        int left = height(root.left);
+        int right = height(root.right);
+
+        diameter = Math.max(diameter, left + right);
+
+        return 1 + Math.max(left, right);
     }
 }

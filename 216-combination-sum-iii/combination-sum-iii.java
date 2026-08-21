@@ -5,7 +5,6 @@ class Solution {
         backtrack(1, k, n, new ArrayList<>());
         return result;
     }
-
     private void backtrack(int start, int k, int target, List<Integer> current) {
 
         if (current.size() == k) {
@@ -14,7 +13,6 @@ class Solution {
             }
             return;
         }
-
         for (int i = start; i <= 9; i++) {
 
             if (i > target) {
@@ -28,4 +26,4 @@ class Solution {
             current.remove(current.size() - 1);
         }
     }
-}
+}                 

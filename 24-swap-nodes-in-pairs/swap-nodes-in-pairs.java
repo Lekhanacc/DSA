@@ -8,30 +8,57 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+
+
+
+// class Solution {
+//     public ListNode swapPairs(ListNode head) {
+
+//         // Dummy node helps handle head swap easily
+//         ListNode dummy = new ListNode(0);
+//         dummy.next = head;
+
+//         ListNode prev = dummy;
+
+//         // While at least 2 nodes remain
+//         while (head != null && head.next != null) {
+
+//             // Identify the two nodes
+//             ListNode first = head;
+//             ListNode second = head.next;
+
+//             // Swapping pointers
+//             prev.next = second;
+//             first.next = second.next;
+//             second.next = first;
+
+//             // Move prev and head forward
+//             prev = first;
+//             head = first.next;
+//         }
+
+//         return dummy.next;
+//     }
+// }
+
 class Solution {
     public ListNode swapPairs(ListNode head) {
 
-        // Dummy node helps handle head swap easily
         ListNode dummy = new ListNode(0);
         dummy.next = head;
 
         ListNode prev = dummy;
 
-        // While at least 2 nodes remain
-        while (head != null && head.next != null) {
+        while (prev.next != null && prev.next.next != null) {
 
-            // Identify the two nodes
-            ListNode first = head;
-            ListNode second = head.next;
+            ListNode first = prev.next;
+            ListNode second = first.next;
 
-            // Swapping pointers
-            prev.next = second;
             first.next = second.next;
             second.next = first;
+            prev.next = second;
 
-            // Move prev and head forward
             prev = first;
-            head = first.next;
         }
 
         return dummy.next;

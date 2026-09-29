@@ -8,7 +8,6 @@ class Solution {
             ans[i] = nums[i];
             ans[i + n] = nums[i];
         }
-
         return ans;
     }
 }

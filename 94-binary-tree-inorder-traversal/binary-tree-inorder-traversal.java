@@ -54,13 +54,10 @@ class Solution {
                 st.push(root);
                 root = root.left;
             }
-
             root = st.pop();
             inorder.add(root.val);
-
             root = root.right;
         }
-
         return inorder;
     }
-}
+}   

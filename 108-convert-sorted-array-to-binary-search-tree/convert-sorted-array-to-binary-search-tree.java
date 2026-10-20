@@ -31,7 +31,7 @@
 class Solution {
     public TreeNode sortedArrayToBST(int[] nums) {
         // Base check
-        if (nums == null || nums.length == 0) {
+        if ( nums.length == 0) {
             return null;
         }
         return constructBST(nums, 0, nums.length - 1);

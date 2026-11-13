@@ -78,12 +78,125 @@
 
 // Optimized striver approach
 
+// class Solution {
+
+//     List<List<String>> ans = new ArrayList<>();
+//     Map<String, Integer> map = new HashMap<>();
+
+//     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+
+//         Set<String> set = new HashSet<>(wordList);
+
+//         if (!set.contains(endWord)) {
+//             return ans;
+//         }
+
+//         Queue<String> q = new LinkedList<>();
+
+//         q.add(beginWord);
+//         map.put(beginWord, 0);
+//         set.remove(beginWord);
+
+//         // STEP 1: BFS - Calculate levels
+
+//         while (!q.isEmpty()) {
+
+//             String word = q.poll();
+//             int level = map.get(word);
+
+//             if (word.equals(endWord)) {
+//                 break;
+//             }
+
+//             char[] arr = word.toCharArray();
+
+//             for (int i = 0; i < arr.length; i++) {
+
+//                 char original = arr[i];
+
+//                 for (char ch = 'a'; ch <= 'z'; ch++) {
+
+//                     arr[i] = ch;
+
+//                     String newWord = new String(arr);
+
+//                     if (set.contains(newWord)) {
+
+//                         q.add(newWord);
+//                         map.put(newWord, level + 1);
+
+//                         set.remove(newWord);
+//                     }
+//                 }
+
+//                 arr[i] = original;
+//             }
+//         }
+
+//         // STEP 2: DFS - Backtracking
+
+//         if (map.containsKey(endWord)) {
+
+//             List<String> path = new ArrayList<>();
+//             path.add(endWord);
+
+//             dfs(endWord, beginWord, path);
+//         }
+
+//         return ans;
+//     }
+
+//     private void dfs(String word, String beginWord, List<String> path) {
+
+//         if (word.equals(beginWord)) {
+
+//             List<String> result = new ArrayList<>(path);
+
+//             Collections.reverse(result);
+
+//             ans.add(result);
+
+//             return;
+//         }
+
+//         int level = map.get(word);
+
+//         char[] arr = word.toCharArray();
+
+//         for (int i = 0; i < arr.length; i++) {
+
+//             char original = arr[i];
+
+//             for (char ch = 'a'; ch <= 'z'; ch++) {
+
+//                 arr[i] = ch;
+
+//                 String newWord = new String(arr);
+
+//                 if (map.containsKey(newWord) &&
+//                     map.get(newWord) == level - 1) {
+
+//                     path.add(newWord);
+
+//                     dfs(newWord, beginWord, path);
+
+//                     path.remove(path.size() - 1);
+//                 }
+//             }
+
+//             arr[i] = original;
+//         }
+//     }
+// }
+
+// Graph + BFS + HashSet + Backtracking (chat gpt)
 class Solution {
 
+    Map<String, List<String>> parents = new HashMap<>();
     List<List<String>> ans = new ArrayList<>();
-    Map<String, Integer> map = new HashMap<>();
 
-    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+    public List<List<String>> findLadders(
+        String beginWord, String endWord, List<String> wordList) {
 
         Set<String> set = new HashSet<>(wordList);
 
@@ -92,51 +205,61 @@ class Solution {
         }
 
         Queue<String> q = new LinkedList<>();
-
         q.add(beginWord);
-        map.put(beginWord, 0);
+
         set.remove(beginWord);
 
-        // STEP 1: BFS - Calculate levels
+        boolean found = false;
 
-        while (!q.isEmpty()) {
+        // BFS
+        while (!q.isEmpty() && !found) {
 
-            String word = q.poll();
-            int level = map.get(word);
+            int size = q.size();
 
-            if (word.equals(endWord)) {
-                break;
-            }
+            Set<String> used = new HashSet<>();
 
-            char[] arr = word.toCharArray();
+            for (int i = 0; i < size; i++) {
 
-            for (int i = 0; i < arr.length; i++) {
+                String word = q.poll();
 
-                char original = arr[i];
+                char[] arr = word.toCharArray();
 
-                for (char ch = 'a'; ch <= 'z'; ch++) {
+                for (int j = 0; j < arr.length; j++) {
 
-                    arr[i] = ch;
+                    char original = arr[j];
 
-                    String newWord = new String(arr);
+                    for (char ch = 'a'; ch <= 'z'; ch++) {
 
-                    if (set.contains(newWord)) {
+                        arr[j] = ch;
 
-                        q.add(newWord);
-                        map.put(newWord, level + 1);
+                        String newWord = new String(arr);
 
-                        set.remove(newWord);
+                        if (set.contains(newWord)) {
+
+                            parents.computeIfAbsent(
+                                newWord, k -> new ArrayList<>()
+                            ).add(word);
+
+                            if (used.add(newWord)) {
+                                q.add(newWord);
+                            }
+
+                            if (newWord.equals(endWord)) {
+                                found = true;
+                            }
+                        }
                     }
-                }
 
-                arr[i] = original;
+                    arr[j] = original;
+                }
             }
+
+            // Remove words after processing the entire level
+            set.removeAll(used);
         }
 
-        // STEP 2: DFS - Backtracking
-
-        if (map.containsKey(endWord)) {
-
+        // Backtracking
+        if (found) {
             List<String> path = new ArrayList<>();
             path.add(endWord);
 
@@ -146,45 +269,29 @@ class Solution {
         return ans;
     }
 
-    private void dfs(String word, String beginWord, List<String> path) {
+    private void dfs(String word, String beginWord,
+                     List<String> path) {
 
         if (word.equals(beginWord)) {
 
             List<String> result = new ArrayList<>(path);
-
             Collections.reverse(result);
-
             ans.add(result);
 
             return;
         }
 
-        int level = map.get(word);
+        if (!parents.containsKey(word)) {
+            return;
+        }
 
-        char[] arr = word.toCharArray();
+        for (String parent : parents.get(word)) {
 
-        for (int i = 0; i < arr.length; i++) {
+            path.add(parent);
 
-            char original = arr[i];
+            dfs(parent, beginWord, path);
 
-            for (char ch = 'a'; ch <= 'z'; ch++) {
-
-                arr[i] = ch;
-
-                String newWord = new String(arr);
-
-                if (map.containsKey(newWord) &&
-                    map.get(newWord) == level - 1) {
-
-                    path.add(newWord);
-
-                    dfs(newWord, beginWord, path);
-
-                    path.remove(path.size() - 1);
-                }
-            }
-
-            arr[i] = original;
+            path.remove(path.size() - 1);
         }
     }
 }
